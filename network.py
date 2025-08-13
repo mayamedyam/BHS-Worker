@@ -12,16 +12,16 @@ class networkJobs:
 
         self._id = device_id
         self._authKey = auth_key
-        self._setup_url = "http://http://bhsotomat.buhikayesenin.com/apix/setupDevice.ashx"
-        self._control_url = "http://http://bhsotomat.buhikayesenin.com/apix/controlDevice.ashx"
-        self._buttonCount_url = "http://http://bhsotomat.buhikayesenin.com/apix/buttonCount.ashx"
-        self._async_url = "http://http://bhsotomat.buhikayesenin.com/apix/asyncFiles.ashx"
-        self._downloadURL = "http://http://bhsotomat.buhikayesenin.com/apix/downloadFile.ashx"
-        self._versionLink = "http://http://bhsotomat.buhikayesenin.com/apix/version.ashx"
-        self._anyinfo_url = "http://http://bhsotomat.buhikayesenin.com/apix/anydesk.ashx"
-        self._clock_url = "http://http://bhsotomat.buhikayesenin.com/apix/getclock.ashx"
-        self._printer_status = "http://http://bhsotomat.buhikayesenin.com/apix/change_printer_status.ashx"
-        self._printer_information = "http://http://bhsotomat.buhikayesenin.com/apix/get_printer_information.ashx"
+        self._setup_url = "http://bhsotomat.buhikayesenin.com/apix/setupDevice.ashx"
+        self._control_url = "http://bhsotomat.buhikayesenin.com/apix/controlDevice.ashx"
+        self._buttonCount_url = "http://bhsotomat.buhikayesenin.com/apix/buttonCount.ashx"
+        self._async_url = "http://bhsotomat.buhikayesenin.com/apix/asyncFiles.ashx"
+        self._downloadURL = "http://bhsotomat.buhikayesenin.com/apix/downloadFile.ashx"
+        self._versionLink = "http://bhsotomat.buhikayesenin.com/apix/version.ashx"
+        self._anyinfo_url = "http://bhsotomat.buhikayesenin.com/apix/anydesk.ashx"
+        self._clock_url = "http://bhsotomat.buhikayesenin.com/apix/getclock.ashx"
+        self._printer_status = "http://bhsotomat.buhikayesenin.com/apix/change_printer_status.ashx"
+        self._printer_information = "http://bhsotomat.buhikayesenin.com/apix/get_printer_information.ashx"
         self._h = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 
         print(f"[NETWORK | MAIN] Network class generated")
