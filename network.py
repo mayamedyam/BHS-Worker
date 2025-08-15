@@ -12,16 +12,16 @@ class networkJobs:
 
         self._id = device_id
         self._authKey = auth_key
-        self._setup_url = "http://bhsotomat.buhikayesenin.com/apix/setupDevice.ashx"
-        self._control_url = "http://bhsotomat.buhikayesenin.com/apix/controlDevice.ashx"
-        self._buttonCount_url = "http://bhsotomat.buhikayesenin.com/apix/buttonCount.ashx"
-        self._async_url = "http://bhsotomat.buhikayesenin.com/apix/asyncFiles.ashx"
-        self._downloadURL = "http://bhsotomat.buhikayesenin.com/apix/downloadFile.ashx"
-        self._versionLink = "http://bhsotomat.buhikayesenin.com/apix/version.ashx"
-        self._anyinfo_url = "http://bhsotomat.buhikayesenin.com/apix/anydesk.ashx"
-        self._clock_url = "http://bhsotomat.buhikayesenin.com/apix/getclock.ashx"
-        self._printer_status = "http://bhsotomat.buhikayesenin.com/apix/change_printer_status.ashx"
-        self._printer_information = "http://bhsotomat.buhikayesenin.com/apix/get_printer_information.ashx"
+        self._setup_url = "https://bhsotomat.nihatersoy.com/apix/setupDevice.ashx"
+        self._control_url = "https://bhsotomat.nihatersoy.com/apix/controlDevice.ashx"
+        self._buttonCount_url = "https://bhsotomat.nihatersoy.com/apix/buttonCount.ashx"
+        self._async_url = "https://bhsotomat.nihatersoy.com/apix/asyncFiles.ashx"
+        self._downloadURL = "https://bhsotomat.nihatersoy.com/apix/downloadFile.ashx"
+        self._versionLink = "https://bhsotomat.nihatersoy.com/apix/version.ashx"
+        self._anyinfo_url = "https://bhsotomat.nihatersoy.com/apix/anydesk.ashx"
+        self._clock_url = "https://bhsotomat.nihatersoy.com/apix/getclock.ashx"
+        self._printer_status = "https://bhsotomat.nihatersoy.com/apix/change_printer_status.ashx"
+        self._printer_information = "https://bhsotomat.nihatersoy.com/apix/get_printer_information.ashx"
         self._h = {'Content-type': 'application/json', 'Accept': 'text/plain'}
 
         print(f"[NETWORK | MAIN] Network class generated")
