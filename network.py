@@ -1,9 +1,8 @@
 import requests as r
-import datetime
-import time
 import os
-import dotenv
-import env_controller
+import time
+import json
+from typing import List, Tuple
 
 class networkJobs:
     def __init__(self, device_id: str, auth_key: str):
@@ -29,92 +28,100 @@ class networkJobs:
             if not self.isRegistered():
                 print("[DEBUG] Cihaz kayıtlı değil, setup başlatılıyor...")
                 self.setup()
-                print('Registiration Sent')
                 while not self.isRegistered():
                     print('Waiting for system grant...')
                     time.sleep(5)
 
-    def is_connected(self):
+    def is_connected(self) -> bool:
         try:
             r.get('https://www.google.com', timeout=5)
             return True
         except (r.ConnectionError, r.Timeout):
             return False
 
-    def versionControl(self, version: str):
-        try:
-            if self.is_connected():
-                response = r.get(self._versionLink)
-                print("[DEBUG] Version control response:", response.status_code, response.text)
-                if response.status_code == 200:
-                    return response.text == version
-                return True
-            else:
-                print('Version cannot be checked currently. No internet interface found')
-                return True
-        except Exception as e:
-            print('-------------Version Control-------------')
-            print(e)
-            print('--------------------------')
-
     def setup(self) -> bool:
         try:
             if self.is_connected():
                 time.sleep(3)
-                setupCredentials = {
-                    'id': self._id,
-                    'authKey': self._authKey,
-                    'wifiName': "Device Setup"
-                }
-                print("[DEBUG] Setup POST URL:", self._setup_url)
-                print("[DEBUG] Setup POST JSON:", setupCredentials)
-
+                setupCredentials = {'id': self._id, 'authKey': self._authKey, 'wifiName': "Device Setup"}
                 response = r.post(self._setup_url, json=setupCredentials, headers=self._h)
-
-                print("[DEBUG] Setup response status:", response.status_code)
-                print("[DEBUG] Setup response body:", response.text)
-
                 return response.status_code == 200
             else:
-                print('Setup process failed due no internet connection')
                 return False
         except Exception as e:
-            print('-------------Setup Process-------------')
-            print(e)
-            print('--------------------------')
+            print("[ERROR] Setup failed:", e)
             return False
 
     def isRegistered(self) -> bool:
-        setupCredentials = {
-            'id': self._id,
-            'authKey': self._authKey
-        }
         try:
+            payload = {'id': self._id, 'authKey': self._authKey}
             if self.is_connected():
-                print("[DEBUG] isRegistered kontrol ediliyor...")
-                response = r.post(self._control_url, json=setupCredentials, headers=self._h)
-                print("[DEBUG] isRegistered status:", response.status_code)
-                print("[DEBUG] isRegistered raw response:", response.text)
-
+                response = r.post(self._control_url, json=payload, headers=self._h)
                 if response.text.strip() == '-D':
-                    print("[DEBUG] Sunucu '-D' döndü, cihaz kayıtlı değil.")
                     return False
-
                 try:
                     data = response.json()
-                    validated = data.get('status') in [1, 2]
-                    print("[DEBUG] isRegistered parsed JSON:", data)
-                    return validated
+                    return data.get('status') in [1, 2]
                 except ValueError:
-                    print("[DEBUG] JSON parse hatası, gelen veri:", response.text)
                     return False
             else:
-                print('Registration data is not available. Continuing for no network mode')
                 return True
         except Exception as e:
-            print('-------------Is Device Registered-------------')
-            print(e)
-            print('--------------------------')
+            print("[ERROR] isRegistered:", e)
             return True
 
-    # Diğer fonksiyonlar aynı, sadece gerektiğinde benzer debug print ekleyebilirsin.
+    def getWorkingTimes(self) -> List[List[str]]:
+        """Cihazın çalışma saatlerini veritabanından çeker."""
+        try:
+            payload = {'id': self._id, 'authKey': self._authKey}
+            response = r.post(self._control_url, json=payload, headers=self._h)
+            data = response.json()
+            # Örnek veri: {"deviceStartTime":"08:00","deviceEndTime":"12:00","device_second_StartTime":"13:00","device_second_EndTime":"17:00"}
+            return [
+                [data.get('deviceStartTime', '08:00'), data.get('deviceEndTime', '12:00')],
+                [data.get('device_second_StartTime', '13:00'), data.get('device_second_EndTime', '17:00')]
+            ]
+        except Exception as e:
+            print("[ERROR] getWorkingTimes:", e)
+            # Default saatler
+            return [['08:00', '12:00'], ['13:00', '17:00']]
+
+    def getButtonCount(self) -> int:
+        try:
+            payload = {'id': self._id, 'authKey': self._authKey}
+            response = r.post(self._buttonCount_url, json=payload, headers=self._h)
+            data = response.json()
+            return int(data.get('count', 8))
+        except Exception as e:
+            print("[ERROR] getButtonCount:", e)
+            return 8
+
+    def downloadFile(self, fileName: str) -> bytes:
+        try:
+            payload = {'id': self._id, 'authKey': self._authKey, 'fileName': fileName}
+            response = r.post(self._downloadURL, json=payload, headers=self._h)
+            if response.status_code == 200:
+                return response.content
+            else:
+                return b''
+        except Exception as e:
+            print("[ERROR] downloadFile:", e)
+            return b''
+
+    def getAnyDeskInfo(self) -> dict:
+        try:
+            payload = {'id': self._id, 'authKey': self._authKey}
+            response = r.post(self._anyinfo_url, json=payload, headers=self._h)
+            return response.json()
+        except Exception as e:
+            print("[ERROR] getAnyDeskInfo:", e)
+            return {}
+
+    def getPrinterInfo(self) -> dict:
+        try:
+            payload = {'id': self._id, 'authKey': self._authKey}
+            response = r.post(self._printer_information, json=payload, headers=self._h)
+            return response.json()
+        except Exception as e:
+            print("[ERROR] getPrinterInfo:", e)
+            return {}
